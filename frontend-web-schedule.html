@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bericht Creator</title>
+    <style>
+        body {
+            background-image: url('https://raw.githubusercontent.com/cinematenpodcast/wabinstagram/main/Background_big.png');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #f8f9fa; /* Lichtgrijze achtergrond */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Schaduw */
+            width: 700px;
+            box-sizing: border-box; /* Inclusief padding */
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .field input[type="text"],
+        .field input[type="datetime-local"],
+        .field textarea {
+            width: calc(100% - 20px); /* Zorgt voor ruimte binnen de container */
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .field textarea {
+            resize: none;
+            height: 60px;
+        }
+
+        .field .disclaimer {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .image-preview {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-preview img {
+            max-width: 70px;
+            max-height: 70px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .success-message img {
+            max-width: 200px;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 25px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="field">
+            <label for="caption">Bijschrift</label>
+            <textarea id="caption" placeholder="Voer bijschrift in..."></textarea>
+            <div id="captionError" class="error-message"></div>
+        </div>
+
+        <div class="field">
+            <label for="image1">Afbeelding URL 1</label>
+            <input type="text" id="image1" placeholder="Voer afbeeldings-URL in...">
+            <div class="image-preview" id="preview1"></div>
+            <div id="image1Error" class="error-message"></div>
+        </div>
+
+        <div class="field">
+            <label for="image2">Afbeelding URL 2</label>
+            <input type="text" id="image2" placeholder="Voer afbeeldings-URL in...">
+            <div class="image-preview" id="preview2"></div>
+            <div id="image2Error" class="error-message"></div>
+        </div>
+
+        <div class="field">
+            <label for="image3">Afbeelding URL 3</label>
+            <input type="text" id="image3" placeholder="Voer afbeeldings-URL in...">
+            <div class="image-preview" id="preview3"></div>
+            <div id="image3Error" class="error-message"></div>
+        </div>
+
+        <div class="field">
+            <label for="datetime">Datum & Tijd</label>
+            <input type="datetime-local" id="datetime">
+            <div class="disclaimer">*Laat dit leeg om onmiddellijk te posten</div>
+        </div>
+
+        <div class="field">
+            <button id="submitBtn">Indienen</button>
+        </div>
+
+        <div id="successMessage" class="success-message" style="display: none;">
+            <p>Bericht succesvol ingediend!</p>
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXEzYTg0N3E1NWpkOG9yZXdvbHBhajE5MXJieTB1Nzd2bGZraHRpMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uLiEXaouJVkuA/giphy.webp" alt="Succes">
+        </div>
+    </div>
+
+    <script>
+        function updateImagePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+
+            input.addEventListener('input', function () {
+                const url = input.value.trim();
+                preview.innerHTML = ''; // Vorige preview wissen
+                if (url) {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.onload = () => preview.appendChild(img);
+                    img.onerror = () => preview.innerHTML = '<span class="error">Ongeldige afbeeldings-URL</span>';
+                }
+            });
+        }
+
+        updateImagePreview('image1', 'preview1');
+        updateImagePreview('image2', 'preview2');
+        updateImagePreview('image3', 'preview3');
+    </script>
+</body>
+</html>
