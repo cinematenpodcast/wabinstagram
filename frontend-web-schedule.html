@@ -165,9 +165,77 @@
             });
         }
 
+        // Voeg preview-functionaliteit toe
         updateImagePreview('image1', 'preview1');
         updateImagePreview('image2', 'preview2');
         updateImagePreview('image3', 'preview3');
+
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            const caption = document.getElementById('caption').value.trim();
+            const image1 = document.getElementById('image1').value.trim();
+            const image2 = document.getElementById('image2').value.trim();
+            const image3 = document.getElementById('image3').value.trim();
+            const datetime = document.getElementById('datetime').value || ''; // Retourneer lege string als niet ingevuld
+
+            // Vorige foutmeldingen wissen
+            document.getElementById('captionError').innerText = '';
+            document.getElementById('image1Error').innerText = '';
+            document.getElementById('image2Error').innerText = '';
+            document.getElementById('image3Error').innerText = '';
+
+            let isValid = true;
+
+            // Valideer verplichte velden
+            if (!caption) {
+                document.getElementById('captionError').innerText = 'Bijschrift is verplicht.';
+                isValid = false;
+            }
+            if (!image1) {
+                document.getElementById('image1Error').innerText = 'Afbeelding URL 1 is verplicht.';
+                isValid = false;
+            }
+            if (!image2) {
+                document.getElementById('image2Error').innerText = 'Afbeelding URL 2 is verplicht.';
+                isValid = false;
+            }
+            if (!image3) {
+                document.getElementById('image3Error').innerText = 'Afbeelding URL 3 is verplicht.';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return; // Stop als validatie faalt
+            }
+
+            const postData = {
+                caption,
+                images: [image1, image2, image3],
+                datetime
+            };
+
+            fetch('https://n8n.cinematen.be/webhook-test/wabpost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block'; // Toon succesbericht
+                    setTimeout(() => {
+                        successMessage.style.display = 'none'; // Verberg na 5 seconden
+                    }, 5000);
+                } else {
+                    alert('Het indienen van het bericht is mislukt.');
+                }
+            })
+            .catch(error => {
+                console.error('Fout:', error);
+                alert('Er is een fout opgetreden bij het indienen van het bericht.');
+            });
+        });
     </script>
 </body>
 </html>
