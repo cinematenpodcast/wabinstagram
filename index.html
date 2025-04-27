@@ -9,12 +9,16 @@
             background-image: url('https://raw.githubusercontent.com/cinematenpodcast/wabinstagram/main/Background_big.png');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed; /* Keep background fixed during scroll */
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            /* align-items: center; /* Removed */
+            /* height: 100vh; */ /* Removed */
+            min-height: 100vh; /* Ensure body takes at least full viewport height */
             margin: 0;
+            padding: 5vh 0; /* Add padding top and bottom */
+            box-sizing: border-box; /* Include padding in height calculation */
         }
 
         .container {
@@ -28,6 +32,7 @@
 
         .field {
             margin-bottom: 20px;
+            text-align: center; /* Center button */
         }
 
         .field label {
@@ -101,6 +106,39 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        .file-upload-label {
+            display: block;
+            font-size: 12px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: normal;
+            color: #555;
+        }
+
+        .file-input {
+            display: block;
+            width: calc(100% - 20px);
+            padding: 5px;
+            font-size: 13px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        button .loading-dots::after {
+            content: ' .'; /* Initial state */
+            animation: dots 1.4s linear infinite;
+            display: inline-block; /* Needed for animation */
+            vertical-align: bottom;
+        }
+
+        @keyframes dots {
+            0% { content: ' .'; }
+            33% { content: ' ..'; }
+            66% { content: ' ...'; }
+            100% { content: ' .'; }
+        }
     </style>
 </head>
 <body>
@@ -112,22 +150,28 @@
         </div>
 
         <div class="field">
-            <label for="image1">Afbeelding URL 1</label>
-            <input type="text" id="image1" placeholder="Voer afbeeldings-URL in...">
+            <label for="image1">Afbeelding URL 1 (of upload)</label>
+            <input type="text" id="image1Url" placeholder="Voer afbeeldings-URL in...">
+            <label for="image1File" class="file-upload-label">Of upload bestand:</label>
+            <input type="file" id="image1File" accept="image/*" class="file-input">
             <div class="image-preview" id="preview1"></div>
             <div id="image1Error" class="error-message"></div>
         </div>
 
         <div class="field">
-            <label for="image2">Afbeelding URL 2</label>
-            <input type="text" id="image2" placeholder="Voer afbeeldings-URL in...">
+            <label for="image2">Afbeelding URL 2 (of upload)</label>
+            <input type="text" id="image2Url" placeholder="Voer afbeeldings-URL in...">
+            <label for="image2File" class="file-upload-label">Of upload bestand:</label>
+            <input type="file" id="image2File" accept="image/*" class="file-input">
             <div class="image-preview" id="preview2"></div>
             <div id="image2Error" class="error-message"></div>
         </div>
 
         <div class="field">
-            <label for="image3">Afbeelding URL 3</label>
-            <input type="text" id="image3" placeholder="Voer afbeeldings-URL in...">
+            <label for="image3">Afbeelding URL 3 (of upload)</label>
+            <input type="text" id="image3Url" placeholder="Voer afbeeldings-URL in...">
+            <label for="image3File" class="file-upload-label">Of upload bestand:</label>
+            <input type="file" id="image3File" accept="image/*" class="file-input">
             <div class="image-preview" id="preview3"></div>
             <div id="image3Error" class="error-message"></div>
         </div>
@@ -149,35 +193,67 @@
     </div>
 
     <script>
-        function updateImagePreview(inputId, previewId) {
-            const input = document.getElementById(inputId);
+        function updateImagePreview(urlInputId, fileInputId, previewId, errorId) {
+            const urlInput = document.getElementById(urlInputId);
+            const fileInput = document.getElementById(fileInputId);
             const preview = document.getElementById(previewId);
+            const errorDiv = document.getElementById(errorId);
 
-            input.addEventListener('input', function () {
-                const url = input.value.trim();
-                preview.innerHTML = ''; // Vorige preview wissen
+            function displayPreview(source) {
+                preview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = source;
+                img.onload = () => preview.appendChild(img);
+                img.onerror = () => preview.innerHTML = '<span class="error">Ongeldige afbeelding</span>';
+            }
+
+            fileInput.addEventListener('change', function () {
+                 errorDiv.innerText = ''; // Clear previous error
+                const file = fileInput.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    urlInput.value = ''; // Clear URL input if file is selected
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        displayPreview(e.target.result);
+                    }
+                    reader.onerror = () => preview.innerHTML = '<span class="error">Kon bestand niet lezen</span>';
+                    reader.readAsDataURL(file);
+                } else if (file) {
+                     preview.innerHTML = '<span class="error">Selecteer een afbeelding aub.</span>';
+                } else if (!urlInput.value.trim()) { // If file is deselected and URL is empty
+                    preview.innerHTML = '';
+                }
+            });
+
+            urlInput.addEventListener('input', function () {
+                errorDiv.innerText = ''; // Clear previous error
+                const url = urlInput.value.trim();
                 if (url) {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.onload = () => preview.appendChild(img);
-                    img.onerror = () => preview.innerHTML = '<span class="error">Ongeldige afbeeldings-URL</span>';
+                    fileInput.value = ''; // Clear file input if URL is entered
+                    displayPreview(url);
+                } else if (!fileInput.files[0]) { // If URL is cleared and no file selected
+                    preview.innerHTML = '';
                 }
             });
         }
 
         // Voeg preview-functionaliteit toe
-        updateImagePreview('image1', 'preview1');
-        updateImagePreview('image2', 'preview2');
-        updateImagePreview('image3', 'preview3');
+        updateImagePreview('image1Url', 'image1File', 'preview1', 'image1Error');
+        updateImagePreview('image2Url', 'image2File', 'preview2', 'image2Error');
+        updateImagePreview('image3Url', 'image3File', 'preview3', 'image3Error');
 
         document.getElementById('submitBtn').addEventListener('click', function () {
+            const submitButton = this; // Reference the button
             const caption = document.getElementById('caption').value.trim();
-            const image1 = document.getElementById('image1').value.trim();
-            const image2 = document.getElementById('image2').value.trim();
-            const image3 = document.getElementById('image3').value.trim();
-            const datetime = document.getElementById('datetime').value || ''; // Retourneer lege string als niet ingevuld
+            const image1Url = document.getElementById('image1Url').value.trim();
+            const image2Url = document.getElementById('image2Url').value.trim();
+            const image3Url = document.getElementById('image3Url').value.trim();
+            const image1File = document.getElementById('image1File').files[0];
+            const image2File = document.getElementById('image2File').files[0];
+            const image3File = document.getElementById('image3File').files[0];
+            const datetime = document.getElementById('datetime').value || '';
 
-            // Vorige foutmeldingen wissen
+            // Reset errors
             document.getElementById('captionError').innerText = '';
             document.getElementById('image1Error').innerText = '';
             document.getElementById('image2Error').innerText = '';
@@ -185,45 +261,83 @@
 
             let isValid = true;
 
-            // Valideer verplichte velden
             if (!caption) {
                 document.getElementById('captionError').innerText = 'Bijschrift is verplicht.';
                 isValid = false;
             }
-            if (!image1) {
-                document.getElementById('image1Error').innerText = 'Afbeelding URL 1 is verplicht.';
-                isValid = false;
+
+            function validateImageInput(url, file, errorId, imageNumber) {
+                if (!url && !file) {
+                     document.getElementById(errorId).innerText = `Afbeelding ${imageNumber} URL of bestand is verplicht.`;
+                     return false;
+                }
+                if (url && file) {
+                    document.getElementById(errorId).innerText = `Geef voor afbeelding ${imageNumber} ofwel een URL of een bestand op, niet beide.`;
+                     return false;
+                }
+                 return true;
             }
-            if (!image2) {
-                document.getElementById('image2Error').innerText = 'Afbeelding URL 2 is verplicht.';
-                isValid = false;
-            }
-            if (!image3) {
-                document.getElementById('image3Error').innerText = 'Afbeelding URL 3 is verplicht.';
-                isValid = false;
-            }
+
+            isValid = validateImageInput(image1Url, image1File, 'image1Error', 1) && isValid;
+            isValid = validateImageInput(image2Url, image2File, 'image2Error', 2) && isValid;
+            isValid = validateImageInput(image3Url, image3File, 'image3Error', 3) && isValid;
 
             if (!isValid) {
                 return; // Stop als validatie faalt
             }
 
-            const postData = {
-                caption,
-                images: [image1, image2, image3],
-                datetime
-            };
+            const formData = new FormData();
+            formData.append('caption', caption);
 
-            fetch('https://n8n.cinematen.be/webhook/wabpost', {
+            // Append image data (either file or URL)
+            if (image1File) {
+                formData.append('image1', image1File, image1File.name);
+            } else if (image1Url) {
+                formData.append('image1', image1Url);
+            }
+
+            if (image2File) {
+                formData.append('image2', image2File, image2File.name);
+            } else if (image2Url) {
+                formData.append('image2', image2Url);
+            }
+
+            if (image3File) {
+                formData.append('image3', image3File, image3File.name);
+            } else if (image3Url) {
+                formData.append('image3', image3Url);
+            }
+
+            if (datetime) {
+                 formData.append('datetime', datetime);
+            }
+
+            // Disable button and change text/HTML
+            submitButton.disabled = true;
+            // Use innerHTML to include the span for the loading dots
+            submitButton.innerHTML = 'Verzenden<span class="loading-dots"></span>';
+
+            fetch('https://n8n.cinematen.be/webhook/3e1019a9-1875-4c6d-a7ab-d210d7736b03', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(postData)
+                body: formData // FormData sets Content-Type automatically
             })
             .then(response => {
                 if (response.ok) {
                     const successMessage = document.getElementById('successMessage');
                     successMessage.style.display = 'block'; // Toon succesbericht
+                    // Clear form fields after successful submission
+                    document.getElementById('caption').value = '';
+                    document.getElementById('image1Url').value = '';
+                    document.getElementById('image1File').value = '';
+                    document.getElementById('preview1').innerHTML = '';
+                    document.getElementById('image2Url').value = '';
+                    document.getElementById('image2File').value = '';
+                    document.getElementById('preview2').innerHTML = '';
+                    document.getElementById('image3Url').value = '';
+                    document.getElementById('image3File').value = '';
+                    document.getElementById('preview3').innerHTML = '';
+                    document.getElementById('datetime').value = '';
+
                     setTimeout(() => {
                         successMessage.style.display = 'none'; // Verberg na 5 seconden
                     }, 5000);
@@ -234,6 +348,12 @@
             .catch(error => {
                 console.error('Fout:', error);
                 alert('Er is een fout opgetreden bij het indienen van het bericht.');
+            })
+            .finally(() => {
+                // Re-enable button and restore text
+                submitButton.disabled = false;
+                // Restore original text using innerText
+                submitButton.innerText = 'Indienen';
             });
         });
     </script>
