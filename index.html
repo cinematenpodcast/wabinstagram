@@ -2,6 +2,7 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
+    <link href="https://wabliefteru.be/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bericht Creator</title>
     <style>
@@ -143,11 +144,12 @@
 </head>
 <body>
     <div class="container">
-        <div class="field">
+        <!-- <div class="field">
             <label for="caption">Bijschrift</label>
             <textarea id="caption" placeholder="Voer bijschrift in..."></textarea>
             <div id="captionError" class="error-message"></div>
-        </div>
+        </div> -->
+        <h2>Beschrijving wordt automatisch opgehaald vanuit spotify.</h2>
 
         <div class="field">
             <label for="image1">Afbeelding URL 1 (of upload)</label>
@@ -317,7 +319,7 @@
             // Use innerHTML to include the span for the loading dots
             submitButton.innerHTML = 'Verzenden<span class="loading-dots"></span>';
 
-            fetch('https://n8n.cinematen.be/webhook/3e1019a9-1875-4c6d-a7ab-d210d7736b03', {
+            fetch('https://n8n.cinematen.be/webhook-test/wabpost', {
                 method: 'POST',
                 body: formData // FormData sets Content-Type automatically
             })
@@ -359,3 +361,4 @@
     </script>
 </body>
 </html>
+
