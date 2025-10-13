@@ -246,27 +246,19 @@
 
         document.getElementById('submitBtn').addEventListener('click', function () {
             const submitButton = this; // Reference the button
-            const caption = document.getElementById('caption').value.trim();
             const image1Url = document.getElementById('image1Url').value.trim();
             const image2Url = document.getElementById('image2Url').value.trim();
             const image3Url = document.getElementById('image3Url').value.trim();
             const image1File = document.getElementById('image1File').files[0];
             const image2File = document.getElementById('image2File').files[0];
             const image3File = document.getElementById('image3File').files[0];
-            const datetime = document.getElementById('datetime').value || '';
 
             // Reset errors
-            document.getElementById('captionError').innerText = '';
             document.getElementById('image1Error').innerText = '';
             document.getElementById('image2Error').innerText = '';
             document.getElementById('image3Error').innerText = '';
 
             let isValid = true;
-
-            if (!caption) {
-                document.getElementById('captionError').innerText = 'Bijschrift is verplicht.';
-                isValid = false;
-            }
 
             function validateImageInput(url, file, errorId, imageNumber) {
                 if (!url && !file) {
@@ -289,7 +281,6 @@
             }
 
             const formData = new FormData();
-            formData.append('caption', caption);
 
             // Append image data (either file or URL)
             if (image1File) {
@@ -310,10 +301,6 @@
                 formData.append('image3', image3Url);
             }
 
-            if (datetime) {
-                 formData.append('datetime', datetime);
-            }
-
             // Disable button and change text/HTML
             submitButton.disabled = true;
             // Use innerHTML to include the span for the loading dots
@@ -328,7 +315,6 @@
                     const successMessage = document.getElementById('successMessage');
                     successMessage.style.display = 'block'; // Toon succesbericht
                     // Clear form fields after successful submission
-                    document.getElementById('caption').value = '';
                     document.getElementById('image1Url').value = '';
                     document.getElementById('image1File').value = '';
                     document.getElementById('preview1').innerHTML = '';
@@ -338,7 +324,6 @@
                     document.getElementById('image3Url').value = '';
                     document.getElementById('image3File').value = '';
                     document.getElementById('preview3').innerHTML = '';
-                    document.getElementById('datetime').value = '';
 
                     setTimeout(() => {
                         successMessage.style.display = 'none'; // Verberg na 5 seconden
