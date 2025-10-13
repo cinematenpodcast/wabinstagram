@@ -244,6 +244,18 @@
         updateImagePreview('image2Url', 'image2File', 'preview2', 'image2Error');
         updateImagePreview('image3Url', 'image3File', 'preview3', 'image3Error');
 
+        // Function to extract filename from URL
+        function extractFilenameFromUrl(url) {
+            try {
+                const urlObj = new URL(url);
+                const pathname = urlObj.pathname;
+                const filename = pathname.split('/').pop();
+                return filename || 'image.jpg'; // fallback if no filename found
+            } catch (e) {
+                return 'image.jpg'; // fallback for invalid URLs
+            }
+        }
+
         document.getElementById('submitBtn').addEventListener('click', function () {
             const submitButton = this; // Reference the button
             const image1Url = document.getElementById('image1Url').value.trim();
@@ -282,23 +294,32 @@
 
             const formData = new FormData();
 
-            // Append image data (either file or URL)
+            // Append image data (either file or URL) with filenames
             if (image1File) {
                 formData.append('data', image1File, image1File.name);
+                formData.append('filename1', image1File.name);
             } else if (image1Url) {
+                const filename1 = extractFilenameFromUrl(image1Url);
                 formData.append('data', image1Url);
+                formData.append('filename1', filename1);
             }
 
             if (image2File) {
                 formData.append('data', image2File, image2File.name);
+                formData.append('filename2', image2File.name);
             } else if (image2Url) {
+                const filename2 = extractFilenameFromUrl(image2Url);
                 formData.append('data', image2Url);
+                formData.append('filename2', filename2);
             }
 
             if (image3File) {
                 formData.append('data', image3File, image3File.name);
+                formData.append('filename3', image3File.name);
             } else if (image3Url) {
+                const filename3 = extractFilenameFromUrl(image3Url);
                 formData.append('data', image3Url);
+                formData.append('filename3', filename3);
             }
 
             // Disable button and change text/HTML
