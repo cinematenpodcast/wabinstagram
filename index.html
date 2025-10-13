@@ -327,7 +327,7 @@
             // Use innerHTML to include the span for the loading dots
             submitButton.innerHTML = 'Verzenden<span class="loading-dots"></span>';
 
-            fetch('https://n8n.cinematen.be/webhook-test/wabpost', {
+            fetch('https://n8n.cinematen.be/webhook/wabpost', {
                 method: 'POST',
                 body: formData // FormData sets Content-Type automatically
             })
