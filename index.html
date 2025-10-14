@@ -327,9 +327,23 @@
             // Use innerHTML to include the span for the loading dots
             submitButton.innerHTML = 'Verzenden<span class="loading-dots"></span>';
 
-            fetch('https://n8n.cinematen.be/webhook/wabpost', {
+            fetch('https://n8n.cinematen.be/webhook-test/wabpost', {
                 method: 'POST',
                 body: formData // FormData sets Content-Type automatically
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Second webhook call for alert
+                    return fetch('https://n8n.cinematen.be/webhook/wabpostalert', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status: 'success' })
+                    });
+                } else {
+                    throw new Error('First webhook failed');
+                }
             })
             .then(response => {
                 if (response.ok) {
