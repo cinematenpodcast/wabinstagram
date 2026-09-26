@@ -1,0 +1,13 @@
+# OpenCode / agent harness (bevat plannen, logs en route33.key)
+.agent-harness/
+.opencode/
+opencode.json
+
+# Node
+node_modules/
+
+# macOS
+.DS_Store
+
+# Logs en tijdelijke bestanden
+*.log

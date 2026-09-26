@@ -10,376 +10,436 @@
             background-image: url('https://raw.githubusercontent.com/cinematenpodcast/wabinstagram/main/Background_big.png');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Keep background fixed during scroll */
+            background-attachment: fixed;
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
-            /* align-items: center; /* Removed */
-            /* height: 100vh; */ /* Removed */
-            min-height: 100vh; /* Ensure body takes at least full viewport height */
+            min-height: 100vh;
             margin: 0;
-            padding: 5vh 0; /* Add padding top and bottom */
-            box-sizing: border-box; /* Include padding in height calculation */
+            padding: 5vh 0;
+            box-sizing: border-box;
         }
 
         .container {
-            background-color: #f8f9fa; /* Lichtgrijze achtergrond */
+            background-color: #f8f9fa;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Schaduw */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             width: 700px;
-            box-sizing: border-box; /* Inclusief padding */
+            box-sizing: border-box;
         }
 
-        .field {
-            margin-bottom: 20px;
-            text-align: center; /* Center button */
+        .field { margin-bottom: 20px; text-align: center; }
+        .field label { display: block; font-size: 14px; margin-bottom: 8px; font-weight: bold; }
+        .field textarea, .field input[type="text"] {
+            width: calc(100% - 20px); padding: 8px 12px; font-size: 14px;
+            border: 1px solid #ccc; border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-
-        .field label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .field input[type="text"],
-        .field input[type="datetime-local"],
-        .field textarea {
-            width: calc(100% - 20px); /* Zorgt voor ruimte binnen de container */
-            padding: 8px 12px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .field textarea {
-            resize: none;
-            height: 60px;
-        }
-
-        .field .disclaimer {
-            color: red;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .image-preview {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .image-preview img {
-            max-width: 70px;
-            max-height: 70px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .success-message {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .success-message img {
-            max-width: 200px;
-            margin-top: 10px;
-        }
-
+        .field textarea { resize: none; height: 90px; }
+        .checks { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-top: 8px; font-size: 14px; }
+        .checks label { font-weight: normal; margin-bottom: 0; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .image-preview { display: flex; gap: 10px; margin-top: 10px; justify-content: center; flex-wrap: wrap; }
+        .image-preview img { max-width: 70px; max-height: 70px; border: 2px solid #ccc; border-radius: 5px; }
+        .gen-result { margin-top: 16px; text-align: center; }
+        .gen-result img { max-width: 420px; width: 100%; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+        .slide1 img { max-width: 260px; }
+        .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+        .error-message { color: red; font-size: 12px; margin-top: 5px; min-height: 16px; }
+        .status-message { color: #555; font-size: 13px; margin-top: 10px; min-height: 18px; }
+        .success-message { text-align: center; margin-top: 20px; }
+        .success-message img { max-width: 200px; margin-top: 10px; }
         button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 25px;
-            font-size: 14px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            background-color: #007BFF; color: white; padding: 10px 25px; font-size: 14px;
+            border: none; border-radius: 5px; cursor: pointer;
         }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .file-upload-label {
-            display: block;
-            font-size: 12px;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-weight: normal;
-            color: #555;
-        }
-
-        .file-input {
-            display: block;
-            width: calc(100% - 20px);
-            padding: 5px;
-            font-size: 13px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #fff;
-        }
-
-        button .loading-dots::after {
-            content: ' .'; /* Initial state */
-            animation: dots 1.4s linear infinite;
-            display: inline-block; /* Needed for animation */
-            vertical-align: bottom;
-        }
-
+        button:hover { background-color: #0056b3; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        button.outline { background-color: #fff; color: #007BFF; border: 2px solid #007BFF; }
+        button.outline:hover { background-color: #eaf3ff; }
+        button .loading-dots::after { content: ' .'; animation: dots 1.4s linear infinite; display: inline-block; vertical-align: bottom; }
         @keyframes dots {
             0% { content: ' .'; }
             33% { content: ' ..'; }
             66% { content: ' ...'; }
             100% { content: ' .'; }
         }
+        .spinner {
+            display: inline-block; width: 26px; height: 26px; margin-top: 12px;
+            border: 4px solid #ccc; border-top-color: #007BFF; border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .file-upload-label { display: block; font-size: 12px; margin-top: 10px; margin-bottom: 5px; font-weight: normal; color: #555; }
+        .file-input { display: block; width: calc(100% - 20px); padding: 5px; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; margin: 0 auto; }
+        .hidden { display: none !important; }
+        .step-note { font-size: 12px; color: #777; margin-bottom: 14px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- <div class="field">
-            <label for="caption">Bijschrift</label>
-            <textarea id="caption" placeholder="Voer bijschrift in..."></textarea>
-            <div id="captionError" class="error-message"></div>
-        </div> -->
-        <h2>Beschrijving wordt automatisch opgehaald vanuit spotify.</h2>
+    <div class="container" id="mainContainer">
+        <!-- ==================== STAP 1: generatie ==================== -->
+        <section id="step1">
+            <h2>Genereer de eerste foto</h2>
+            <p class="step-note">Beschrijf een situatie met de hosts. De prompt wordt slim uitgebreid en omgezet in een foto.</p>
 
-        <div class="field">
-            <label for="image1">Afbeelding URL 1 (of upload)</label>
-            <input type="text" id="image1Url" placeholder="Voer afbeeldings-URL in...">
-            <label for="image1File" class="file-upload-label">Of upload bestand:</label>
-            <input type="file" id="image1File" accept="image/*" class="file-input">
-            <div class="image-preview" id="preview1"></div>
-            <div id="image1Error" class="error-message"></div>
-        </div>
+            <div class="field">
+                <label for="promptInput">Beschrijf de foto</label>
+                <textarea id="promptInput" placeholder="Bijv. de jongens spelen Monopoly, Yorrick is boos en gooit het spelbord in de lucht."></textarea>
+            </div>
 
-        <div class="field">
-            <label for="image2">Afbeelding URL 2 (of upload)</label>
-            <input type="text" id="image2Url" placeholder="Voer afbeeldings-URL in...">
-            <label for="image2File" class="file-upload-label">Of upload bestand:</label>
-            <input type="file" id="image2File" accept="image/*" class="file-input">
-            <div class="image-preview" id="preview2"></div>
-            <div id="image2Error" class="error-message"></div>
-        </div>
+            <div class="field">
+                <label>Welke hosts zitten in de foto?</label>
+                <div class="checks">
+                    <label><input type="checkbox" id="hostYorrick" checked> Yorrick</label>
+                    <label><input type="checkbox" id="hostAlexander" checked> Alexander</label>
+                    <label><input type="checkbox" id="hostStephan" checked> Stephan</label>
+                    <label><input type="checkbox" id="hostGast"> Gast</label>
+                </div>
+                <div id="genError" class="error-message"></div>
+            </div>
 
-        <div class="field">
-            <label for="image3">Afbeelding URL 3 (of upload)</label>
-            <input type="text" id="image3Url" placeholder="Voer afbeeldings-URL in...">
-            <label for="image3File" class="file-upload-label">Of upload bestand:</label>
-            <input type="file" id="image3File" accept="image/*" class="file-input">
-            <div class="image-preview" id="preview3"></div>
-            <div id="image3Error" class="error-message"></div>
-        </div>
-<!--
-        <div class="field">
-            <label for="datetime">Datum & Tijd</label>
-            <input type="datetime-local" id="datetime">
-            <div class="disclaimer">*Laat dit leeg om onmiddellijk te posten</div>
-        </div>
--->
-        <div class="field">
-            <button id="submitBtn">Indienen</button>
-        </div>
+            <div class="field">
+                <button id="submitGen">Indienen</button>
+            </div>
 
-        <div id="successMessage" class="success-message" style="display: none;">
-            <p>Bericht succesvol ingediend!</p>
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXEzYTg0N3E1NWpkOG9yZXdvbHBhajE5MXJieTB1Nzd2bGZraHRpMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uLiEXaouJVkuA/giphy.webp" alt="Succes">
-        </div>
+            <div class="gen-result" id="loadingArea" style="display:none;">
+                <div class="spinner"></div>
+                <div class="status-message">Foto wordt gegenereerd… dit kan tot een minuut duren</div>
+            </div>
+
+            <div class="gen-result" id="genResult" style="display:none;"></div>
+
+            <div class="btn-row" id="genButtons" style="display:none;">
+                <button id="btnNext">Volgende</button>
+                <button id="btnRetry" class="outline">Volledige Retry</button>
+                <button id="btnEdit" class="outline">Lichte aanpassing</button>
+            </div>
+            <div id="genStatus" class="status-message"></div>
+        </section>
+
+        <!-- ==================== STAP 2: slide 1 + 2 foto's ==================== -->
+        <section id="step2" class="hidden">
+            <h2>Afbeeldingen voor de post</h2>
+
+            <div class="field">
+                <label>Slide 1 (gegenereerd)</label>
+                <div class="image-preview slide1" id="slide1Area"></div>
+            </div>
+
+            <div class="field">
+                <label for="image2Url">Afbeelding URL 2 (of upload)</label>
+                <input type="text" id="image2Url" placeholder="Voer afbeeldings-URL in...">
+                <label for="image2File" class="file-upload-label">Of upload bestand:</label>
+                <input type="file" id="image2File" accept="image/*" class="file-input">
+                <div class="image-preview" id="preview2"></div>
+                <div id="image2Error" class="error-message"></div>
+            </div>
+
+            <div class="field">
+                <label for="image3Url">Afbeelding URL 3 (of upload)</label>
+                <input type="text" id="image3Url" placeholder="Voer afbeeldings-URL in...">
+                <label for="image3File" class="file-upload-label">Of upload bestand:</label>
+                <input type="file" id="image3File" accept="image/*" class="file-input">
+                <div class="image-preview" id="preview3"></div>
+                <div id="image3Error" class="error-message"></div>
+            </div>
+
+            <div class="field">
+                <button id="submitPost">Indienen</button>
+            </div>
+            <div id="postStatus" class="status-message"></div>
+
+            <div id="successMessage" class="success-message" style="display:none;">
+                <p>Bericht succesvol ingediend!</p>
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXEzYTg0N3E1NWpkOG9yZXdvbHBhajE5MXJieTB1Nzd2bGZraHRpMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uLiEXaouJVkuA/giphy.webp" alt="Succes">
+            </div>
+        </section>
     </div>
 
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
+        // ---- config ----
+        var WAB_TOKEN = 'ea6397cd37e4a73b8a3ee23afc1d3c92';
+        var WABGEN_URL = 'https://n8n.cinematen.be/webhook/wabgen';
+        var WABUPLOAD_URL = 'https://n8n.cinematen.be/webhook/wabupload';
+        var WABPOST_URL = 'https://n8n.cinematen.be/webhook/wabpost';
+        var WABPOSTALERT_URL = 'https://n8n.cinematen.be/webhook/wabpostalert';
+        var PUSHER_KEY = '2ee0f625a9a38380338c';
+        var PUSHER_CLUSTER = 'eu';
+        var GEN_TIMEOUT_MS = 180000;
+
+        // ---- state ----
+        var state = { imageUrl: null, fileName: null, fileId: null };
+
+        // ---- helpers ----
+        function extractFilenameFromUrl(url) {
+            try {
+                var pathname = new URL(url).pathname;
+                var fileName = pathname.split('/').pop();
+                return fileName || 'image.jpg';
+            } catch (e) { return 'image.jpg'; }
+        }
+
+        function setGenLoading(on) {
+            document.getElementById('submitGen').disabled = on;
+            var sb = document.getElementById('submitGen');
+            sb.innerHTML = on ? 'Verzenden<span class="loading-dots"></span>' : 'Indienen';
+            document.getElementById('loadingArea').style.display = on ? 'block' : 'none';
+            document.getElementById('genButtons').style.display = on ? 'none' : document.getElementById('submitGen').style.display === 'none' ? 'flex' : 'none';
+        }
+
+        function showGenStatus(msg) {
+            document.getElementById('genStatus').textContent = msg || '';
+        }
+
+        function showImageActions() {
+            document.getElementById('submitGen').style.display = 'none';
+            document.getElementById('genButtons').style.display = 'flex';
+        }
+
+        // ---- preview (stap 2: slides 2/3) ----
         function updateImagePreview(urlInputId, fileInputId, previewId, errorId) {
-            const urlInput = document.getElementById(urlInputId);
-            const fileInput = document.getElementById(fileInputId);
-            const preview = document.getElementById(previewId);
-            const errorDiv = document.getElementById(errorId);
+            var urlInput = document.getElementById(urlInputId);
+            var fileInput = document.getElementById(fileInputId);
+            var preview = document.getElementById(previewId);
+            var errorDiv = document.getElementById(errorId);
 
             function displayPreview(source) {
                 preview.innerHTML = '';
-                const img = document.createElement('img');
+                var img = document.createElement('img');
                 img.src = source;
-                img.onload = () => preview.appendChild(img);
-                img.onerror = () => preview.innerHTML = '<span class="error">Ongeldige afbeelding</span>';
+                img.onload = function () { preview.appendChild(img); };
+                img.onerror = function () { preview.innerHTML = '<span class="error-message">Ongeldige afbeelding</span>'; };
             }
 
             fileInput.addEventListener('change', function () {
-                 errorDiv.innerText = ''; // Clear previous error
-                const file = fileInput.files[0];
+                errorDiv.innerText = '';
+                var file = fileInput.files[0];
                 if (file && file.type.startsWith('image/')) {
-                    urlInput.value = ''; // Clear URL input if file is selected
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        displayPreview(e.target.result);
-                    }
-                    reader.onerror = () => preview.innerHTML = '<span class="error">Kon bestand niet lezen</span>';
+                    urlInput.value = '';
+                    var reader = new FileReader();
+                    reader.onload = function (e) { displayPreview(e.target.result); };
+                    reader.onerror = function () { preview.innerHTML = '<span class="error-message">Kon bestand niet lezen</span>'; };
                     reader.readAsDataURL(file);
                 } else if (file) {
-                     preview.innerHTML = '<span class="error">Selecteer een afbeelding aub.</span>';
-                } else if (!urlInput.value.trim()) { // If file is deselected and URL is empty
+                    preview.innerHTML = '<span class="error-message">Selecteer een afbeelding aub.</span>';
+                } else if (!urlInput.value.trim()) {
                     preview.innerHTML = '';
                 }
             });
 
             urlInput.addEventListener('input', function () {
-                errorDiv.innerText = ''; // Clear previous error
-                const url = urlInput.value.trim();
-                if (url) {
-                    fileInput.value = ''; // Clear file input if URL is entered
-                    displayPreview(url);
-                } else if (!fileInput.files[0]) { // If URL is cleared and no file selected
+                errorDiv.innerText = '';
+                var value = urlInput.value.trim();
+                if (value) {
+                    fileInput.value = '';
+                    displayPreview(value);
+                } else if (!fileInput.files[0]) {
                     preview.innerHTML = '';
                 }
             });
         }
-
-        // Voeg preview-functionaliteit toe
-        updateImagePreview('image1Url', 'image1File', 'preview1', 'image1Error');
         updateImagePreview('image2Url', 'image2File', 'preview2', 'image2Error');
         updateImagePreview('image3Url', 'image3File', 'preview3', 'image3Error');
 
-        // Function to extract filename from URL
-        function extractFilenameFromUrl(url) {
-            try {
-                const urlObj = new URL(url);
-                const pathname = urlObj.pathname;
-                const filename = pathname.split('/').pop();
-                return filename || 'image.jpg'; // fallback if no filename found
-            } catch (e) {
-                return 'image.jpg'; // fallback for invalid URLs
-            }
+        // ---- generatie via Pusher ----
+        function callGeneration(mode, previousImageUrl, onEvent, onTimeout) {
+            var jobId = (crypto.randomUUID ? crypto.randomUUID() : ('g' + Date.now() + Math.random().toString(16).slice(2))).replace(/-/g, '');
+            var channelName = 'wabgen-' + jobId;
+            var pusher = new Pusher(PUSHER_KEY, { cluster: PUSHER_CLUSTER });
+            var channel = pusher.subscribe(channelName);
+            var done = false;
+            var timer = setTimeout(function () {
+                if (done) return;
+                done = true;
+                try { pusher.disconnect(); } catch (e) {}
+                onTimeout();
+            }, GEN_TIMEOUT_MS);
+
+            channel.bind('generated', function (data) {
+                if (done) return;
+                done = true;
+                clearTimeout(timer);
+                try { pusher.disconnect(); } catch (e) {}
+                onEvent(data);
+            });
+            channel.bind('pusher:subscription_error', function (err) {
+                if (done) return;
+                done = true; clearTimeout(timer);
+                onTimeout();
+            });
+
+            var payload = { jobId: jobId, prompt: document.getElementById('promptInput').value.trim(), hosts: getSelectedHosts(), gast: document.getElementById('hostGast').checked, mode: mode };
+            if (previousImageUrl) payload.previousImageUrl = previousImageUrl;
+
+            fetch(WABGEN_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Wab-Token': WAB_TOKEN },
+                body: JSON.stringify(payload)
+            }).then(function (res) {
+                if (!res.ok) throw new Error('webhook wabgen niet ok');
+            }).catch(function () {
+                if (done) return;
+                done = true; clearTimeout(timer);
+                try { pusher.disconnect(); } catch (e) {}
+                onTimeout();
+            });
         }
 
-        document.getElementById('submitBtn').addEventListener('click', function () {
-            const submitButton = this; // Reference the button
-            const image1Url = document.getElementById('image1Url').value.trim();
-            const image2Url = document.getElementById('image2Url').value.trim();
-            const image3Url = document.getElementById('image3Url').value.trim();
-            const image1File = document.getElementById('image1File').files[0];
-            const image2File = document.getElementById('image2File').files[0];
-            const image3File = document.getElementById('image3File').files[0];
+        function getSelectedHosts() {
+            var hosts = [];
+            if (document.getElementById('hostYorrick').checked) hosts.push('Yorrick');
+            if (document.getElementById('hostAlexander').checked) hosts.push('Alexander');
+            if (document.getElementById('hostStephan').checked) hosts.push('Stephan');
+            return hosts;
+        }
 
-            // Reset errors
-            document.getElementById('image1Error').innerText = '';
+        function startGeneration(mode, previousImageUrl) {
+            var errorDiv = document.getElementById('genError');
+            errorDiv.innerText = '';
+            showGenStatus('');
+
+            var prompt = document.getElementById('promptInput').value.trim();
+            var hosts = getSelectedHosts();
+            if (!prompt) { errorDiv.innerText = 'Geef een prompt in om de foto te beschrijven.'; return; }
+            if (hosts.length === 0) { errorDiv.innerText = 'Selecteer minstens één host.'; return; }
+
+            setGenLoading(true);
+            callGeneration(mode, previousImageUrl, function (data) {
+                setGenLoading(false);
+                if (data && data.status === 'success' && data.imageUrl) {
+                    state.imageUrl = data.imageUrl;
+                    state.fileName = data.fileName;
+                    state.fileId = data.fileId;
+                    var box = document.getElementById('genResult');
+                    box.innerHTML = '';
+                    var img = document.createElement('img');
+                    img.src = data.imageUrl;
+                    var loading = document.createElement('p');
+                    box.appendChild(loading);
+                    img.onload = function () { loading.remove(); box.appendChild(img); showImageActions(); showGenStatus('Foto klaar. Goedkeuren via "Volgende", of bijsturen via "Volledige Retry" / "Lichte aanpassing".'); };
+                    img.onerror = function () { loading.textContent = 'Kon de foto niet laden.'; box.appendChild(img); };
+                    box.appendChild(img);
+                } else {
+                    var msg = (data && (data.message || 'generatie mislukt')) || 'generatie mislukt';
+                    showGenStatus('Fout: ' + msg + ' — pas de prompt aan en probeer opnieuw.');
+                    document.getElementById('submitGen').style.display = '';
+                }
+            }, function () {
+                setGenLoading(false);
+                showGenStatus('Er is een fout opgetreden of de generatie duurde te lang. Pas de prompt aan en probeer het opnieuw.');
+                document.getElementById('submitGen').style.display = '';
+            });
+        }
+
+        document.getElementById('submitGen').addEventListener('click', function () {
+            startGeneration('fresh', null);
+        });
+        document.getElementById('btnRetry').addEventListener('click', function () {
+            startGeneration('fresh', null);
+        });
+        document.getElementById('btnEdit').addEventListener('click', function () {
+            if (!state.imageUrl) return;
+            startGeneration('edit', state.imageUrl);
+        });
+
+        // ---- stap 2 ----
+        document.getElementById('btnNext').addEventListener('click', function () {
+            if (!state.imageUrl) return;
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            var area = document.getElementById('slide1Area');
+            area.innerHTML = '';
+            var img = document.createElement('img');
+            img.src = state.imageUrl;
+            area.appendChild(img);
+        });
+
+        function validateSlide(urlVal, file, errorId, label) {
+            if (!urlVal && !file) { document.getElementById(errorId).innerText = label + ' is verplicht (URL of bestand).'; return false; }
+            if (urlVal && file) { document.getElementById(errorId).innerText = 'Geef voor ' + label + ' ofwel een URL of een bestand, niet beide.'; return false; }
+            return true;
+        }
+
+        function uploadFileToDirectus(file) {
+            var fd = new FormData();
+            fd.append('data', file, file.name);
+            return fetch(WABUPLOAD_URL, {
+                method: 'POST',
+                headers: { 'X-Wab-Token': WAB_TOKEN },
+                body: fd
+            }).then(function (res) { return res.json(); })
+              .then(function (json) {
+                    if (json && json.imageUrl) return json;
+                    throw new Error(json && json.error ? json.error : 'wabupload mislukt');
+                });
+        }
+
+        document.getElementById('submitPost').addEventListener('click', function () {
+            var btn = document.getElementById('submitPost');
             document.getElementById('image2Error').innerText = '';
             document.getElementById('image3Error').innerText = '';
+            document.getElementById('postStatus').textContent = '';
 
-            let isValid = true;
+            var u2 = document.getElementById('image2Url').value.trim();
+            var u3 = document.getElementById('image3Url').value.trim();
+            var f2 = document.getElementById('image2File').files[0];
+            var f3 = document.getElementById('image3File').files[0];
 
-            function validateImageInput(url, file, errorId, imageNumber) {
-                if (!url && !file) {
-                     document.getElementById(errorId).innerText = `Afbeelding ${imageNumber} URL of bestand is verplicht.`;
-                     return false;
-                }
-                if (url && file) {
-                    document.getElementById(errorId).innerText = `Geef voor afbeelding ${imageNumber} ofwel een URL of een bestand op, niet beide.`;
-                     return false;
-                }
-                 return true;
-            }
+            var ok2 = validateSlide(u2, f2, 'image2Error', 'Afbeelding 2');
+            var ok3 = validateSlide(u3, f3, 'image3Error', 'Afbeelding 3');
+            if (!ok2 || !ok3) return;
+            if (!state.imageUrl) { document.getElementById('postStatus').textContent = 'Slide 1 ontbreekt — ga terug en genereer opnieuw.'; return; }
 
-            isValid = validateImageInput(image1Url, image1File, 'image1Error', 1) && isValid;
-            isValid = validateImageInput(image2Url, image2File, 'image2Error', 2) && isValid;
-            isValid = validateImageInput(image3Url, image3File, 'image3Error', 3) && isValid;
+            btn.disabled = true;
+            btn.innerHTML = 'Verzenden<span class="loading-dots"></span>';
+            document.getElementById('postStatus').textContent = 'Afbeeldingen worden verwerkt…';
 
-            if (!isValid) {
-                return; // Stop als validatie faalt
-            }
+            var parts = [];
+            var p2 = (f2 ? uploadFileToDirectus(f2).then(function (r) { return { url: r.imageUrl, name: r.fileName }; })
+                        : Promise.resolve({ url: u2, name: extractFilenameFromUrl(u2) }));
+            var p3 = (f3 ? uploadFileToDirectus(f3).then(function (r) { return { url: r.imageUrl, name: r.fileName }; })
+                        : Promise.resolve({ url: u3, name: extractFilenameFromUrl(u3) }));
+            parts.push(p2, p3);
 
-            const formData = new FormData();
+            Promise.all(parts).then(function (resolved) {
+                var formData = new FormData();
+                formData.append('data', state.imageUrl);
+                formData.append('filename1', state.fileName || 'generated.jpg');
+                formData.append('data', resolved[0].url);
+                formData.append('filename2', resolved[0].name);
+                formData.append('data', resolved[1].url);
+                formData.append('filename3', resolved[1].name);
 
-            // Append image data (either file or URL) with filenames
-            if (image1File) {
-                formData.append('data', image1File, image1File.name);
-                formData.append('filename1', image1File.name);
-            } else if (image1Url) {
-                const filename1 = extractFilenameFromUrl(image1Url);
-                formData.append('data', image1Url);
-                formData.append('filename1', filename1);
-            }
-
-            if (image2File) {
-                formData.append('data', image2File, image2File.name);
-                formData.append('filename2', image2File.name);
-            } else if (image2Url) {
-                const filename2 = extractFilenameFromUrl(image2Url);
-                formData.append('data', image2Url);
-                formData.append('filename2', filename2);
-            }
-
-            if (image3File) {
-                formData.append('data', image3File, image3File.name);
-                formData.append('filename3', image3File.name);
-            } else if (image3Url) {
-                const filename3 = extractFilenameFromUrl(image3Url);
-                formData.append('data', image3Url);
-                formData.append('filename3', filename3);
-            }
-
-            // Disable button and change text/HTML
-            submitButton.disabled = true;
-            // Use innerHTML to include the span for the loading dots
-            submitButton.innerHTML = 'Verzenden<span class="loading-dots"></span>';
-
-            fetch('https://n8n.cinematen.be/webhook/wabpost', {
-                method: 'POST',
-                body: formData // FormData sets Content-Type automatically
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Second webhook call for alert
-                    return fetch('https://n8n.cinematen.be/webhook/wabpostalert', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ status: 'success' })
-                    });
-                } else {
-                    throw new Error('First webhook failed');
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    const successMessage = document.getElementById('successMessage');
-                    successMessage.style.display = 'block'; // Toon succesbericht
-                    // Clear form fields after successful submission
-                    document.getElementById('image1Url').value = '';
-                    document.getElementById('image1File').value = '';
-                    document.getElementById('preview1').innerHTML = '';
-                    document.getElementById('image2Url').value = '';
-                    document.getElementById('image2File').value = '';
-                    document.getElementById('preview2').innerHTML = '';
-                    document.getElementById('image3Url').value = '';
-                    document.getElementById('image3File').value = '';
-                    document.getElementById('preview3').innerHTML = '';
-
-                    setTimeout(() => {
-                        successMessage.style.display = 'none'; // Verberg na 5 seconden
-                    }, 5000);
-                } else {
-                    alert('Het indienen van het bericht is mislukt.');
-                }
-            })
-            .catch(error => {
-                console.error('Fout:', error);
-                alert('Er is een fout opgetreden bij het indienen van het bericht.');
-            })
-            .finally(() => {
-                // Re-enable button and restore text
-                submitButton.disabled = false;
-                // Restore original text using innerText
-                submitButton.innerText = 'Indienen';
+                return fetch(WABPOST_URL, { method: 'POST', body: formData });
+            }).then(function (response) {
+                if (!response.ok) throw new Error('wabpost mislukt');
+                return fetch(WABPOSTALERT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'success' })
+                });
+            }).then(function (response) {
+                if (!response.ok) throw new Error('wabpostalert mislukt');
+                document.getElementById('postStatus').textContent = '';
+                var sm = document.getElementById('successMessage');
+                sm.style.display = 'block';
+                setTimeout(function () { sm.style.display = 'none'; }, 5000);
+                document.getElementById('image2Url').value = '';
+                document.getElementById('image2File').value = '';
+                document.getElementById('preview2').innerHTML = '';
+                document.getElementById('image3Url').value = '';
+                document.getElementById('image3File').value = '';
+                document.getElementById('preview3').innerHTML = '';
+            }).catch(function (err) {
+                document.getElementById('postStatus').textContent = 'Het indienen van het bericht is mislukt.';
+                console.error('Fout:', err);
+            }).finally(function () {
+                btn.disabled = false;
+                btn.innerText = 'Indienen';
             });
         });
     </script>
 </body>
 </html>
-
-
